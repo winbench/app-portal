@@ -7,5 +7,6 @@ update-app-library-db:
   - schedules
   tags:
   - windows
+  - powershell
   script:
-  - powershell -ExecutionPolicy ByPass -C & { .\\db-update\\Update-AppLibraryDatabase.ps1 }
+  - .\\db-update\\Update-AppLibraryDatabase.ps1
