@@ -10,7 +10,6 @@ update:app-library-db:
   - powershell
   cache:
     key: "$CI_COMMIT_SHA"
-    untracked: true
     paths:
     - db-update/downloads
   script:
