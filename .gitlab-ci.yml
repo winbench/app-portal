@@ -8,4 +8,4 @@ update-app-library-db:
   tags:
   - windows
   script:
-  - db-update/Update-AppLibraryDatabase.ps1
+  - powershell -ExecutionPolicy ByPass -C & { .\\db-update\\Update-AppLibraryDatabase.ps1 }
