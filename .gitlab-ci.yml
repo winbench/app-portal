@@ -1,5 +1,11 @@
+stages:
+- build
+
 update-app-library-db:
+  stage: build
   only:
   - schedules
+  tags:
+  - windows
   script:
   - db-update/Update-AppLibraryDatabase.ps1
