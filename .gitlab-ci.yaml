@@ -1,0 +1,5 @@
+update-app-library-db:
+  only:
+  - schedules
+  script:
+  - db-update/Update-AppLibraryDatabase.ps1
