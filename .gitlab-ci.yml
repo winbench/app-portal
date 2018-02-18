@@ -1,12 +1,17 @@
 stages:
-- build
+- update
 
-update-app-library-db:
-  stage: build
+update:app-library-db:
+  stage: update
   only:
   - schedules
   tags:
   - windows
   - powershell
+  cache:
+    key: "$env:CI_COMMIT_SHA"
+    untracked: true
+    paths:
+    - db-update/downloads
   script:
   - .\\db-update\\Update-AppLibraryDatabase.ps1
