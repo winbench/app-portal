@@ -23,6 +23,8 @@ if (Test-Path $workDir)
 mkdir $workDir | Out-Null
 cd $workDir
 
+$databaseFile = "$workDir\bench-apps-db.json"
+
 # Discover latest Bench release
 $apiUrl = "https://api.github.com/repos/winbench/bench/releases/latest"
 $data = Invoke-WebRequest $apiUrl -UseBasicParsing | ConvertFrom-Json
@@ -101,15 +103,8 @@ if (!$?)
 # Load Bench configuration
 $cfg = New-Object Mastersign.Bench.BenchConfiguration ($workDir, $true, $true, $false)
 
-# Enumerate all apps
-$no = 0
-foreach ($app in $cfg.Apps)
-{
-    $no++
-    if (!$app.AppLibrary) { continue }
-    Write-Host "$($no.ToString("0000")) $($app.ID)"
-}
-
+# Write new database as JSON
+echo "Writing database file"
 function AppInfo ()
 {
     begin
@@ -148,5 +143,6 @@ function AppInfo ()
         }
     }
 }
-
-$cfg.Apps | AppInfo | ConvertTo-Json | Out-File $workDir\db.json -Encoding UTF8
+$utf8 = New-Object System.Text.UTF8Encoding ($false)
+$jsonText = $cfg.Apps | AppInfo | ConvertTo-Json -Compress
+[IO.File]::WriteAllText($databaseFile, $jsonText, $utf8)
