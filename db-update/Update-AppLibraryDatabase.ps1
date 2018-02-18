@@ -109,3 +109,44 @@ foreach ($app in $cfg.Apps)
     if (!$app.AppLibrary) { continue }
     Write-Host "$($no.ToString("0000")) $($app.ID)"
 }
+
+function AppInfo ()
+{
+    begin
+    {
+        $no = 0
+    }
+    process
+    {
+        $no++
+        @{
+            "Index" = $no
+            "ID" = $_.ID
+            "AppLibrary" = $_.AppLibrary.ID
+            "AppLibraryUrl" = $_.AppLibrary.Url
+            "Namespace" = $_.Namespace
+            "Label" = $_.Label
+            "Category" = $_.Category
+            "Typ" = $_.Typ
+            "IsManagedPackage" = $_.IsManagedPackage
+            "PackageName" = $_.PackageName
+            "Version" = $_.Version
+            "Website" = $_.Website
+            "Docs" = $_.Docs
+            "License" = $_.License
+            "LicenseUrl" = $_.LicenseUrl
+            "Dependencies" = $_.Dependencies
+            "Responsibilities" = $_.Responsibilities
+            "Url" = $_.Url
+            "Only64Bit" = $_.Only64Bit
+            "Register" = $_.Register
+            "Environment" = $_.Environment
+            "RegistryKeys" = $_.RegistryKeys
+            "IsAdornmentRequired" = $_.IsAdornmentRequired
+            "Launcher" = $_.Launcher
+            "MarkdownDocumentation" = $_.MarkdownDocumentation
+        }
+    }
+}
+
+$cfg.Apps | AppInfo | ConvertTo-Json | Out-File $workDir\db.json -Encoding UTF8
