@@ -18,7 +18,7 @@ cd $workDir
 
 # Discover latest Bench release
 $apiUrl = "https://api.github.com/repos/winbench/bench/releases/latest"
-$data = Invoke-WebRequest $apiUrl | ConvertFrom-Json
+$data = Invoke-WebRequest $apiUrl -UseBasicParsing | ConvertFrom-Json
 if (!$data.assets)
 {
     Write-Error "Downloading the latest release info failed."
@@ -34,7 +34,7 @@ if (!$archiveUrl)
 }
 
 # Download Bench.zip
-Invoke-WebRequest $archiveUrl -OutFile "$workDir\Bench.zip"
+Invoke-WebRequest $archiveUrl -UseBasicParsing -OutFile "$workDir\Bench.zip"
 [string]$benchDir = mkdir .\bench
 
 # Extract Bench.zip
