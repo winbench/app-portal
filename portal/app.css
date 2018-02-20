@@ -1,0 +1,137 @@
+body, table {
+	font-family: "Segoe UI", "Arial", "Helvetica", sans-serif;
+}
+
+h1, h3 {
+	font-family: "Segoe UI Light", "Helvetica", sans-serif;
+	font-weight: 100;
+}
+h2 {
+	font-family: "Segoe UI", "Helvetica", sans-serif;
+	font-weight: 500;
+}
+
+h1 { font-size: 46px; }
+h2 { font-size: 28px; }
+h3 { font-size: 32px; margin: 0.5em 0 0.5em 0; }
+
+header {
+	background-color: #555;
+	color: #FFF;
+	vertical-align: top;
+}
+
+header a, header a:visited {
+	color: #FFF;
+	text-decoration: none;
+}
+
+header h1 {
+	text-transform: none;
+	display: inline-block;
+	margin: 0px 0px 20px 0px;
+	padding: 0;
+}
+
+#home-logo {
+	width: 80px;
+	height: 80px;
+	margin: 24px;
+	display: inline-block;
+	vertical-align: bottom;
+}
+
+.monospace {
+	font-family: Consolas, "Courier New", monospace;
+}
+
+.enum-item {
+	display: inline-block;
+	vertical-align: baseline;
+	margin: 0 0.5em 0 0;
+}
+
+section {
+	padding: 1em;
+}
+
+section.search, section.app-details-header {
+	background-color: #222;
+	color: #EEE;
+	text-align: center;
+}
+
+section.search input{
+	color: #000;
+}
+
+.result-table {
+	width: 100%;
+}
+
+.table-row-hover:hover {
+	background-color: #F0F0F0;
+	cursor: pointer;
+}
+
+.result-cell-empty {
+	text-align: center;
+	color: #888;
+	font-style: italic;
+}
+
+.result-cell-label, .result-head-label {
+	text-align: left;
+}
+.result-cell-typ, .result-head-typ {
+	text-align: center;
+}
+.result-cell-version, .result-head-version {
+	text-align: right;
+}
+.result-cell-actions {
+	text-align: center;
+}
+
+.app-details-header h2 {
+	margin: 10px;
+}
+
+.app-details {
+	background-repeat: no-repeat;
+	background-position: top right;
+	background-position: top 2.5em right 2.5em;
+	background-size: 5em;
+}
+.app-typ-python-package { background-image: url(logos/python.svg); }
+.app-typ-python2-package { background-image: url(logos/python.svg); }
+.app-typ-python3-package { background-image: url(logos/python.svg); }
+.app-typ-ruby-package { background-image: url(logos/ruby.svg); }
+.app-typ-node-package { background-image: url(logos/npm.svg); }
+.app-typ-nuget-package { background-image: url(logos/nuget.svg); }
+
+.close-details-button {
+	float: right;
+	margin-top: 10px;
+}
+
+.app-details-table td {
+	padding: 0.35em 0.5em;
+	vertical-align: baseline;
+}
+
+.app-details-table tr td:nth-child(1) {
+	font-weight: 600;
+	text-align: right;
+	vertical-align: baseline;
+	white-space: nowrap;
+}
+
+.app-details-table .app-id-list {
+	margin: 0;
+	padding: 0;
+}
+.app-details-table .app-id-list li {
+	display: inline-block;
+	margin: 0 0.5em 0 0;
+}

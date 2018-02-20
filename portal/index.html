@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html ng-app="benchApps">
+
+<head>
+	<title>Bench Apps</title>
+	<meta charset="utf-8">
+	<!--	
+	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lodash@4.17.5/lodash.min.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.6/showdown.min.js"></script>
+	-->
+	<link rel="stylesheet" type="text/css" href="vendor/pure-min.css">
+	<script type="text/javascript" src="vendor/lodash.min.js"></script>
+	<script type="text/javascript" src="vendor/angular.min.js"></script>
+	<script type="text/javascript" src="vendor/showdown.min.js"></script>
+
+	<link rel="stylesheet" href="app.css">
+	<script type="text/javascript" src="app.js"></script>
+</head>
+
+<body>
+	<header>
+		<img id="home-logo" src="logo.svg">
+		<a href="">
+			<h1>Bench Apps</h1>
+		</a>
+	</header>
+	<div ng-controller="AppSearchController as appSearch">
+		<section class="search" ng-show="!app">
+			<form class="pure-form">
+				<fieldset>
+					<input id="search-field" class="pure-input-3-4" ng-model="search" type="text" placeholder="Keyword, Category">
+				</fieldset>
+			</form>
+		</section>
+		<section class="app-details-header" ng-if="app">
+			<button class="close-details-button pure-button pure-button-primary" ng-click="hideAppDetails()">Close Details</button>
+			<h2>{{ app.Label }}</h2>
+		</section>
+		<section class="app-details app-typ-{{app.Typ}}" ng-if="app">
+			<h3>Properties</h3>
+			<table class="app-details-table">
+				<tr>
+					<td>Library</td>
+					<td class="monospace">
+						<a ng-if="appLibs[app.AppLibrary].Url" href="{{appLibs[app.AppLibrary].Url}}" target="_blank">{{app.AppLibrary}}</a>
+						<span ng-if="!(appLibs[app.AppLibrary].Url)">{{app.AppLibrary}}</span>
+					</td>
+				</tr>
+				<tr>
+					<td>ID</td>
+					<td class="monospace">{{app.ID}}</td>
+				</tr>
+				<tr>
+					<td>Category</td>
+					<td>{{app.Category}}</td>
+				</tr>
+				<tr>
+					<td>App Type:</td>
+					<td>{{app.Typ}}</td>
+				</tr>
+				<tr ng-if="app.Website">
+					<td>Website</td>
+					<td>
+						<a href="{{app.Website}}" target="_blank">{{app.Website}}</a>
+					</td>
+				</tr>
+				<tr ng-if="app.License">
+					<td>License</td>
+					<td>
+						<a ng-if="app.LicenseUrl" href="{{app.LicenseUrl}}" target="_blank">{{app.License}}</a>
+						<span ng-if="!app.LicenseUrl">{{app.License}}</span>
+					</td>
+				</tr>
+				<tr ng-if="app.Version">
+					<td>Version</td>
+					<td>{{app.Version}}</td>
+				</tr>
+				<tr ng-if="app.Only64Bit">
+					<td>Only 64Bit</td>
+					<td>yes</td>
+				</tr>
+				<tr ng-if="notEmpty(app.Dependencies)">
+					<td>Dependencies</td>
+					<td>
+						<ul class="app-id-list">
+							<li ng-repeat="id in app.Dependencies">
+								<a href="#{{id}}">{{apps[id].Label}}</a>
+							</li>
+						</ul>
+					</td>
+				</tr>
+				<tr ng-if="notEmpty(app.Responsibilities)">
+					<td>Responsibilities</td>
+					<td>
+						<ul class="app-id-list">
+							<li ng-repeat="id in app.Responsibilities">
+								<a href="#{{id}}">{{apps[id].Label}}</a>
+							</li>
+						</ul>
+					</td>
+				</tr>
+				<tr>
+					<td>Has Launcher</td>
+					<td>{{app.Launcher ? 'yes' : 'no'}}</td>
+				</tr>
+				<tr>
+					<td>Register in PATH</td>
+					<td>{{app.Register ? 'yes' : 'no'}}</td>
+				</tr>
+				<tr ng-if="notEmpty(app.Environment)">
+					<td>Environment</td>
+					<td>
+						<span ng-repeat="envvar in app.Environment" class="monospace enum-item">{{envvar}}</span>
+					</td>
+				</tr>
+				<tr ng-if="notEmpty(app.RegistryKeys)">
+					<td>Registry Isolation</td>
+					<td>
+						<span ng-repeat="key in app.RegistryKeys" class="monospace enum-item">HKCU\{{key}}</span>
+					</td>
+				</tr>
+				<tr ng-if="notEmpty(app.Docs)">
+					<td>Doc Links</td>
+					<td>
+						<span ng-repeat="(name, url) in app.Docs" class="enum-item">
+							<a ng-if="url.startsWith('http://') || url.startsWith('https://')"
+								href="{{url}}" target="_blank">{{name}}</a>
+							<span ng-if="!url.startsWith('http://') &amp;&amp; !url.startsWith('https://')">{{name}}</span>
+						</span>
+					</td>
+				</tr>
+			</table>
+			<div ng-if="app.MarkdownDocumentation" class="app-description">
+				<h3>Description</h3>
+				<div markdown="app.MarkdownDocumentation"></div>
+			</div>
+		</section>
+		<section class="results" ng-if="!app">
+			<div ng-if="dbLoadError" class="error-message">
+				Loading the app database failed.
+			</div>
+			<table ng-if="!dbLoadError &amp;&amp; notEmpty(selectedApps)" class="result-table pure-table pure-table-horizontal">
+				<thead>
+					<tr>
+						<th class="result-head-label">Label</th>
+						<th class="result-head-typ">Type</th>
+						<th class="result-head-version">Version</th>
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="app in selectedApps" ng-click="showAppDetails(app)" class="table-row-hover">
+						<td class="result-cell-label">{{app.Label}}</td>
+						<td class="result-cell-typ">{{app.Typ}}</td>
+						<td class="result-cell-version">{{app.Version}}</td>
+						<td class="result-cell-actions">
+							<button class="pure-button" ng-click="showAppDetails(app)">Details</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div ng-if="selectedApps.length == 0 &amp;&amp; search" class="result-cell-empty">
+				No Results.
+			</div>
+			<div ng-if="selectedApps.length == 0 &amp;&amp; !search" class="result-cell-empty">
+				Enter keywords to search for apps.
+			</div>
+		</section>
+	</div>
+</body>
+
+</html>
