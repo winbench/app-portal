@@ -20,7 +20,7 @@ angular.module('benchApps', [])
       $scope.app = null;
       $scope.dbLoadError = false;
 
-      $scope.notEmpty = function (v) { return !_.isEmpty(v); }
+      $scope.notEmpty = function (v) { return !_.isEmpty(v); };
 
       $http.get('bench-apps-db.json')
         .then(function (response) {
