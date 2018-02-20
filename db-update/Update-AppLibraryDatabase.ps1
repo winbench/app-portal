@@ -18,12 +18,12 @@ if (!(Test-Path $downloadDir))
 $workDir = "$Script:thisDir\tmp"
 if (Test-Path $workDir)
 {
-    del $workDir -Recurse
+    Remove-Item $workDir -Recurse
 }
 mkdir $workDir | Out-Null
-cd $workDir
+Set-Location $workDir
 
-$databaseFile = "$workDir\bench-apps-db.json"
+$databaseFile = "$Script:thisDir\..\portal\bench-apps-db.json"
 
 # Discover latest Bench release
 $apiUrl = "https://api.github.com/repos/winbench/bench/releases/latest"
@@ -35,13 +35,13 @@ if (!$data.assets)
 }
 
 $release = $data.name
-echo "Latest release: $release"
+Write-Output "Latest release: $release"
 
 # Check cache
 [string]$cachedRelease = Get-Content "$downloadDir\version.txt" -ErrorAction SilentlyContinue
 if ($release -ne $cachedRelease)
 {
-    echo "Downloading Bench release $release"
+    Write-Output "Downloading Bench release $release"
     $archiveUrl = $data.assets `
         | ? { $_.name -eq "Bench.zip" } `
         | % { $_.browser_download_url }
@@ -59,7 +59,7 @@ if ($release -ne $cachedRelease)
 }
 else
 {
-    echo "Using Bench $release from cache"
+    Write-Output "Using Bench $release from cache"
 }
 
 # Extract Bench.zip
@@ -82,7 +82,7 @@ catch
 
 # Initialize Bench environment for app library download
 mkdir "$workDir\config" | Out-Null
-copy "$workDir\res\config.template.md" "$workDir\config\config.md"
+Copy-Item "$workDir\res\config.template.md" "$workDir\config\config.md"
 "" | Out-File "$workDir\config\apps-activated.txt" -Encoding Default
 "" | Out-File "$workDir\config\apps-deactivated.txt" -Encoding Default
 
@@ -104,8 +104,17 @@ if (!$?)
 $cfg = New-Object Mastersign.Bench.BenchConfiguration ($workDir, $true, $true, $false)
 
 # Write new database as JSON
-echo "Writing database file"
-function AppInfo ()
+Write-Output "Writing database file"
+function AppLibUrl ($appLib)
+{
+    [string]$url = $appLib.Url;
+    if ($url.StartsWith("https://github.com/") -and $url.EndsWith("/archive/master.zip"))
+    {
+        $url = $url.Substring(0, $url.Length - 18)
+    }
+    return $url
+}
+function AppLibInfo ()
 {
     begin
     {
@@ -117,32 +126,67 @@ function AppInfo ()
         @{
             "Index" = $no
             "ID" = $_.ID
+            "Url" = $(AppLibUrl $_)
+        }
+    }
+}
+function ToHashtable ($dict) {
+    return New-Object System.Collections.Hashtable ($dict)
+}
+function AppCustomization ($app) {
+    $names = @("extract", "setup", "env", "pre-run", "post-run", "test", "remove")
+    return [string[]]($names | ? { $app.GetCustomScript($_) })
+}
+function AppInfo ()
+{
+    begin
+    {
+        $no = 0
+    }
+    process
+    {
+        $no++
+        $info = @{
+            "Index" = $no
+            "ID" = $_.ID
             "AppLibrary" = $_.AppLibrary.ID
-            "AppLibraryUrl" = $_.AppLibrary.Url
             "Namespace" = $_.Namespace
             "Label" = $_.Label
             "Category" = $_.Category
             "Typ" = $_.Typ
             "IsManagedPackage" = $_.IsManagedPackage
             "PackageName" = $_.PackageName
-            "Version" = $_.Version
+            "Version" = $(if ($_.IsVersioned) {$_.Version} else {$null})
             "Website" = $_.Website
-            "Docs" = $_.Docs
             "License" = $_.License
             "LicenseUrl" = $_.LicenseUrl
             "Dependencies" = $_.Dependencies
             "Responsibilities" = $_.Responsibilities
-            "Url" = $_.Url
+            "Url32Bit" = $_.Url32Bit
+            "Url64Bit" = $_.Url64Bit
             "Only64Bit" = $_.Only64Bit
             "Register" = $_.Register
-            "Environment" = $_.Environment
             "RegistryKeys" = $_.RegistryKeys
             "IsAdornmentRequired" = $_.IsAdornmentRequired
             "Launcher" = $_.Launcher
             "MarkdownDocumentation" = $_.MarkdownDocumentation
         }
+        $info.Docs = [Collections.Hashtable]::new($_.Docs)
+        $info.Environment = $_.Environment.Keys
+        $info.Customization = @()
+        foreach ($n in @("extract", "setup", "env", "pre-run", "post-run", "test", "remove"))
+        {
+            if ($_.GetCustomScript($n)) { $info.Customization += $n }
+        }
+        return $info
     }
 }
+$db = @{
+    "LastUpdateUTC" = [DateTime]::UtcNow.ToString("yyyy-MM-dd HH:mm:ss")
+    "AppLibraries" = $($cfg.AppLibraries | AppLibInfo)
+    "Apps" = $($cfg.Apps | AppInfo)
+}
+
 $utf8 = New-Object System.Text.UTF8Encoding ($false)
-$jsonText = $cfg.Apps | AppInfo | ConvertTo-Json -Compress
+$jsonText = $db | ConvertTo-Json -Depth 3 -Compress
 [IO.File]::WriteAllText($databaseFile, $jsonText, $utf8)
