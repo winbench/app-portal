@@ -33,6 +33,14 @@ header h1 {
 	padding: 0;
 }
 
+footer {
+	margin: 2em 0;
+	padding: 0.5em 1em;
+	border-top: 1px solid #EEE;
+	color: #888;
+	text-align: center;
+}
+
 #home-logo {
 	width: 80px;
 	height: 80px;
@@ -111,8 +119,9 @@ section.search input{
 .app-typ-nuget-package { background-image: url(logos/nuget.svg); }
 
 .close-details-button {
-	float: right;
+	position: absolute;
 	margin-top: 10px;
+	right: 2em;
 }
 
 .app-details-table td {

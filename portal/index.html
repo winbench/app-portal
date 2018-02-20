@@ -7,14 +7,16 @@
 	<!--	
 	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lodash@4.17.5/lodash.min.js"></script>
-	<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moment@2.20.1/moment.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/showdown@1.8.6/dist/showdown.min.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.6/showdown.min.js"></script>
 	-->
 	<link rel="stylesheet" type="text/css" href="vendor/pure-min.css">
 	<script type="text/javascript" src="vendor/lodash.min.js"></script>
-	<script type="text/javascript" src="vendor/angular.min.js"></script>
+	<script type="text/javascript" src="vendor/moment.min.js"></script>
 	<script type="text/javascript" src="vendor/showdown.min.js"></script>
+	<script type="text/javascript" src="vendor/angular.min.js"></script>
 
 	<link rel="stylesheet" href="app.css">
 	<script type="text/javascript" src="app.js"></script>
@@ -22,7 +24,9 @@
 
 <body>
 	<header>
-		<img id="home-logo" src="logo.svg">
+		<a href="https://winbench.org">
+			<img id="home-logo" src="logo.svg">
+		</a>
 		<a href="">
 			<h1>Bench Apps</h1>
 		</a>
@@ -31,7 +35,7 @@
 		<section class="search" ng-show="!app">
 			<form class="pure-form">
 				<fieldset>
-					<input id="search-field" class="pure-input-3-4" ng-model="search" type="text" placeholder="Keyword, Category">
+					<input id="search-field" class="pure-input-3-4" ng-model="search" type="text" placeholder="Search">
 				</fieldset>
 			</form>
 		</section>
@@ -166,9 +170,12 @@
 				No Results.
 			</div>
 			<div ng-if="selectedApps.length == 0 &amp;&amp; !search" class="result-cell-empty">
-				Enter keywords to search for apps.
+				Enter a category or keywords to search for apps.
 			</div>
 		</section>
+		<footer ng-if="db.LastUpdateStr">
+			Last database update: {{db.LastUpdateStr}}
+		</footer>
 	</div>
 </body>
 

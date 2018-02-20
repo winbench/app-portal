@@ -25,6 +25,7 @@ angular.module('benchApps', [])
       $http.get('bench-apps-db.json')
         .then(function (response) {
           $scope.db = response.data;
+          $scope.db.LastUpdateStr = moment($scope.db.LastUpdate).calendar();
           $scope.appLibs = _.keyBy($scope.db.AppLibraries, function (appLib) {
             return appLib.ID;
           });
@@ -34,7 +35,7 @@ angular.module('benchApps', [])
           $scope.updateSearchResult();
           updateSelectedApp();
           $scope.dbLoadError = false;
-        }, function (response) {
+        }, function () {
           $scope.dbLoadError = true;
         });
 

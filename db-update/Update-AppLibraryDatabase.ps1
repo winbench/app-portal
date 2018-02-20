@@ -182,7 +182,7 @@ function AppInfo ()
     }
 }
 $db = @{
-    "LastUpdateUTC" = [DateTime]::UtcNow.ToString("yyyy-MM-dd HH:mm:ss")
+    "LastUpdate" = [DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
     "AppLibraries" = $($cfg.AppLibraries | AppLibInfo)
     "Apps" = $($cfg.Apps | AppInfo)
 }
