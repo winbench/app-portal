@@ -1,6 +1,6 @@
 stages:
 - deploy
-- update-db
+- update
 
 deploy:portal:
   stage: deploy
@@ -13,10 +13,9 @@ deploy:portal:
   - lftp --help
 
 update:app-library-db:
-  stage: update-db
+  stage: update
   only:
   - schedules
-  - master
   tags:
   - windows
   - powershell
@@ -25,4 +24,4 @@ update:app-library-db:
     paths:
     - db-update/downloads
   script:
-  - .\\db-update\\Update-AppLibraryDatabase.ps1 -TargetUrl $env:FTP_TARGET_URL -User $env:FTP_USER -Password $env:FTP_PASSWORD
+  - .\\db-update\\Update-AppLibraryDatabase.ps1 -TargetUrl $env:FTP_TARGET_URL/bench-apps-db.json -User $env:FTP_USER -Password $env:FTP_PASSWORD
