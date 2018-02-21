@@ -1,6 +1,5 @@
 stages:
 - deploy
-- update
 
 deploy:portal:
   stage: deploy
@@ -14,7 +13,7 @@ deploy:portal:
   - lftp -u $FTP_USER,$FTP_PASSWORD -e "mirror -R -e -X bench-apps-db.json; exit" $FTP_TARGET_URL
 
 update:app-library-db:
-  stage: update
+  stage: deploy
   only:
   - schedules
   tags:
