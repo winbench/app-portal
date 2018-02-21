@@ -13,4 +13,4 @@ update:app-library-db:
     paths:
     - db-update/downloads
   script:
-  - .\\db-update\\Update-AppLibraryDatabase.ps1
+  - .\\db-update\\Update-AppLibraryDatabase.ps1 -TargetUrl $env:FTP_TARGET_URL -User $env:FTP_USER -Password $env:FTP_PASSWORD
