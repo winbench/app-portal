@@ -11,11 +11,7 @@ deploy:portal:
   image: docker-registry.mastersign.de/tk-docker/lftp
   script:
   - cd portal
-  - lftp $FTP_TARGET_URL <<- UPLOAD\n
-      user $FTP_USER "$FTP_PASSWORD"\n
-      lpwd\n
-      pwd\n
-    UPLOAD
+  - lftp $FTP_TARGET_URL -u $FTP_USER,"$FTP_PASSWORD" -c "lpwd; pwd"
 
 update:app-library-db:
   stage: update
