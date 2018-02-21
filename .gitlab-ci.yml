@@ -5,6 +5,8 @@ deploy:portal:
   stage: deploy
   only:
   - master
+  except:
+  - schedules
   tags:
   - docker
   image: docker-registry.mastersign.de/tk-docker/lftp
