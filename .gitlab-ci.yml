@@ -1,10 +1,22 @@
 stages:
-- update
+- deploy
+- update-db
+
+deploy:portal:
+  stage: deploy
+  only:
+  - master
+  tags:
+  - docker
+  image: docker-registry.mastersign.de/tk-docker/lftp
+  script:
+  - lftp --help
 
 update:app-library-db:
-  stage: update
+  stage: update-db
   only:
   - schedules
+  - master
   tags:
   - windows
   - powershell
