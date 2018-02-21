@@ -11,7 +11,7 @@ deploy:portal:
   image: docker-registry.mastersign.de/tk-docker/lftp
   script:
   - cd portal
-  - lftp -u $FTP_USER,$FTP_PASSWORD -e "mirror -R -X bench-apps-db.json; exit" $FTP_TARGET_URL
+  - lftp -u $FTP_USER,$FTP_PASSWORD -e "mirror -R -e -X bench-apps-db.json; exit" $FTP_TARGET_URL
 
 update:app-library-db:
   stage: update
