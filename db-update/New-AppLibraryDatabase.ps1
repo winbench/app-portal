@@ -94,4 +94,6 @@ $db = @{
 
 $utf8 = New-Object System.Text.UTF8Encoding ($false)
 $jsonText = $db | ConvertTo-Json -Depth 3 -Compress
+
+Write-Output "Writing new app database to $TargetFile ..."
 [IO.File]::WriteAllText($TargetFile, $jsonText, $utf8)
