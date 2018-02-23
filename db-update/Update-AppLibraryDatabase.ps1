@@ -6,6 +6,10 @@ param (
 )
 $Script:thisDir = Split-Path $MyInvocation.MyCommand.Path -Parent
 
+# Allow HTTPS connections via TLS 1.1 or TLS 1.2
+$AllProtocols = [System.Net.SecurityProtocolType]'Tls11,Tls12'
+[System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
+
 $databaseFile = $LocalDatabaseFile
 if (![IO.Path]::IsPathRooted($LocalDatabaseFile))
 {
