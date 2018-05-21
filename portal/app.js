@@ -40,11 +40,12 @@ angular.module('benchApps', [])
         });
 
       function normalizeString(s) {
-        return _.lowerCase(s);
+        return _.trim(_.toLower(s), ' "');
       }
 
       function splitKeywords(s) {
-        return s.split(/\s+/);
+        var matches = s.match(/"[^"]+"|[^"\s]+/g);
+        return _.map(matches, normalizeString);
       }
 
       function checkKeyword(app, keyword) {
@@ -68,10 +69,11 @@ angular.module('benchApps', [])
       $scope.search = '';
       $scope.updateSearchResult = function () {
         if (!$scope.search) {
+          $scope.keywords = [];
           $scope.selectedApps = [];
         } else {
-          var search = normalizeString($scope.search);
-          var keywords = splitKeywords(search);
+          var keywords = splitKeywords($scope.search);
+          $scope.keywords = keywords;
           $scope.selectedApps = _.chain($scope.apps)
             .values()
             .filter(function (app) { return checkKeywords(app, keywords); })
