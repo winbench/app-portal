@@ -1,6 +1,6 @@
 param (
     $BenchRoot = $(Get-Location),
-    $TargetFile = "bench-apps.json"
+    $TargetFile = "$(Get-Location)\bench-apps.json"
 )
 
 # Load Bench PowerShell API
