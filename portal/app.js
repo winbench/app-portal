@@ -43,17 +43,38 @@ angular.module('benchApps', [])
         return _.lowerCase(s);
       }
 
+      function splitKeywords(s) {
+        return s.split(/\s+/);
+      }
+
+      function checkKeyword(app, keyword) {
+        if (_.includes(normalizeString(app.Label), keyword)) {
+          return true;
+        }
+        if (_.includes(normalizeString(app.Category), keyword)) {
+          return true;
+        }
+        if (app.Tags && app.Tags.length > 0 &&
+            _.some(app.Tags, function (t) { return normalizeString(t) == keyword; })) {
+          return true;
+        }
+        return false;
+      }
+
+      function checkKeywords(app, keywords) {
+        return _.every(keywords, function (k) { return checkKeyword(app, k); });
+      }
+
       $scope.search = '';
       $scope.updateSearchResult = function () {
         if (!$scope.search) {
           $scope.selectedApps = [];
         } else {
           var search = normalizeString($scope.search);
+          var keywords = splitKeywords(search);
           $scope.selectedApps = _.chain($scope.apps)
             .values()
-            .filter(function (app) {
-              return _.includes(_.lowerCase(app.Label), search);
-            })
+            .filter(function (app) { return checkKeywords(app, keywords); })
             .sortBy('Label')
             .value();
         }
