@@ -58,6 +58,7 @@ function AppInfo ()
             "Namespace" = $_.Namespace
             "Label" = $_.Label
             "Category" = $_.Category
+			"Tags" = $_.Tags
             "Typ" = $_.Typ
             "IsManagedPackage" = $_.IsManagedPackage
             "PackageName" = $_.PackageName
