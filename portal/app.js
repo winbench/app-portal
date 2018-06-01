@@ -83,6 +83,12 @@ angular.module('benchApps', [])
       };
       $scope.$watch('search', $scope.updateSearchResult);
 
+      $scope.searchFor = function (text) {
+        if (_.includes(text, ' ')) text = '"' + text + '"';
+        $scope.search = text;
+        $scope.hideAppDetails();
+      };
+
       function updateSelectedApp() {
         var appId = $location.hash();
         $scope.app = $scope.apps[appId];

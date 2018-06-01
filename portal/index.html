@@ -63,6 +63,12 @@
 					<td>Category</td>
 					<td>{{app.Category}}</td>
 				</tr>
+				<tr ng-if="app.Tags.length">
+					<td>Tags</td>
+					<td>
+						<span class="app-tag" ng-repeat="tag in app.Tags"><a href="" ng-click="searchFor(tag)">{{ tag }}</a></span>
+					</td>
+				</tr>
 				<tr>
 					<td>App Type:</td>
 					<td>{{app.Typ}}</td>

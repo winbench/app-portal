@@ -144,3 +144,16 @@ section.search input{
 	display: inline-block;
 	margin: 0 0.5em 0 0;
 }
+
+.app-tag {
+	display: inline-block;
+	padding: 0 0.5em 2px 0.5em;
+	margin: 0 0.33em 0 0;
+	color: #ffffff;
+	background-color: #0078e7;
+	border-radius: 2px;
+}
+.app-tag a {
+	color: #ffffff;
+	text-decoration: none;
+}
