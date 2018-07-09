@@ -16,6 +16,7 @@
 	<script type="text/javascript" src="vendor/lodash.min.js"></script>
 	<script type="text/javascript" src="vendor/moment.min.js"></script>
 	<script type="text/javascript" src="vendor/showdown.min.js"></script>
+	<script type="text/javascript" src="vendor/wordcloud2.min.js"></script>
 	<script type="text/javascript" src="vendor/angular.min.js"></script>
 
 	<link rel="stylesheet" href="app.css">
@@ -36,10 +37,23 @@
 	<div ng-controller="AppSearchController as appSearch">
 		<section class="search" ng-show="!app">
 			<form class="pure-form">
-				<fieldset>
-					<input id="search-field" class="pure-input-3-4" ng-model="search" type="text" placeholder="Search">
+				<fieldset class="pure-g">
+					<div class="pure-u-1-6"></div>
+					<div class="pure-u-2-3">
+						<input id="search-field" class="pure-input-1" ng-model="search" type="text" placeholder="Enter a category or keywords to search for apps">
+					</div>
+					<div class="pure-u-1-6" style="text-align: left;">
+						<button ng-click="search = null" style="margin-left: 0.5em;"
+							ng-class="{'pure-button': true, 'pure-button-primary': search, 'pure-button-disabled': !search}">X</button>
+					</div>
 				</fieldset>
 			</form>
+		</section>
+		<section class="wordcloud" ng-show="!app &amp;&amp; !search">
+			<!-- <span ng-repeat="p in tagCloud">{{p[0]}}: {{p[1]}}</span> -->
+			<div id="wordcloud-wrapper">
+				<canvas id="wordcloud"></canvas>
+			</div>
 		</section>
 		<section class="app-details-header" ng-if="app">
 			<button class="close-details-button pure-button pure-button-primary" ng-click="hideAppDetails()">Close Details</button>
@@ -176,9 +190,6 @@
 			</table>
 			<div ng-if="selectedApps.length == 0 &amp;&amp; search" class="result-cell-empty">
 				No Results.
-			</div>
-			<div ng-if="selectedApps.length == 0 &amp;&amp; !search" class="result-cell-empty">
-				Enter a category or keywords to search for apps.
 			</div>
 		</section>
 		<footer ng-if="db.LastUpdateStr">

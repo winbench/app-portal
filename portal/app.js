@@ -16,6 +16,7 @@ angular.module('benchApps', [])
       $scope.db = {};
       $scope.appLibs = {};
       $scope.apps = {};
+      $scope.tagCloud = [];
       $scope.selectedApps = [];
       $scope.app = null;
       $scope.dbLoadError = false;
@@ -32,6 +33,7 @@ angular.module('benchApps', [])
           $scope.apps = _.keyBy($scope.db.Apps, function (app) {
             return app.ID;
           });
+          buildTagCloud($scope.db.Apps);
           $scope.updateSearchResult();
           updateSelectedApp();
           $scope.dbLoadError = false;
@@ -64,6 +66,71 @@ angular.module('benchApps', [])
 
       function checkKeywords(app, keywords) {
         return _.every(keywords, function (k) { return checkKeyword(app, k); });
+      }
+
+      function wordWeight(stepSize) {
+        return function (size) {
+          return 9 + Math.pow(1 + size, 0.9) * stepSize * 4;
+        };
+      }
+
+      function wordColor(maxSize) {
+        var colors = [
+          '#424242',
+          '#86ae1e',
+          '#86ae1e',
+          '#1ba1e2',
+          '#1ba1e2',
+          '#267d41',
+          '#267d41',
+          '#267d41',
+          '#0072c6',
+          '#0072c6',
+          '#0072c6',
+          '#ffc400'
+        ];
+        return function wordColor(word, size) {
+          return _.sample(colors);
+        };
+      }
+
+      function wordClick(p, d, e) {
+        var word = p[0];
+        $scope.search = word.indexOf(' ') >= 0 ? '"' + word + '"' : word;
+        $scope.$apply();
+      }
+
+      function wordHover(p, d, e) {
+        var wordcloudE = document.getElementById('wordcloud');
+        wordcloudE.style.cursor = p ? 'pointer' : 'default';
+      }
+
+      function buildTagCloud(apps) {
+        $scope.tagCloud = _.toPairs(_.countBy(_.flatten(_.map(apps, 'Tags'))));
+        var maxCount = _.max(_.map($scope.tagCloud, function (e) { return e[1]; }));
+        var wordcloudE = document.getElementById('wordcloud');
+        wordcloudE.height = wordcloudE.width = Math.min(
+          (window.innerWidth || 0) * 0.75,
+          (window.innerHeight || 0) * 0.5);
+        if (wordcloudE && WordCloud.isSupported) {
+          var stepSize = wordcloudE.getBoundingClientRect().width / 1024.0;
+          WordCloud(wordcloudE, {
+            list: $scope.tagCloud,
+            gridSize: Math.round(16 * stepSize),
+            weightFactor: wordWeight(stepSize),
+            fontFamily: "Segoe UI, Arial, Helvetica, sans-serif",
+            fontWeight: 500,
+            color: wordColor(maxCount),
+            click: wordClick,
+            hover: wordHover,
+            rotateRatio: 0.3,
+            rotationSteps: 2,
+            ellipticity: 1,
+            shape: 'square',
+            clearCanvas: true,
+            backgroundColor: '#fff'
+          });
+        }
       }
 
       $scope.search = '';
