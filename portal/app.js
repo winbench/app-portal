@@ -57,6 +57,9 @@ angular.module('benchApps', [])
         if (_.includes(normalizeString(app.Category), keyword)) {
           return true;
         }
+        if (_.includes(normalizeString(app.ExeName), keyword)) {
+          return true;
+        }
         if (app.Tags && app.Tags.length > 0 &&
             _.some(app.Tags, function (t) { return normalizeString(t) == keyword; })) {
           return true;
