@@ -71,6 +71,7 @@ function AppInfo ()
             "Url32Bit" = $_.Url32Bit
             "Url64Bit" = $_.Url64Bit
             "Only64Bit" = $_.Only64Bit
+            "ExeName" = [IO.Path]::GetFileName($_.Exe)
             "Register" = $_.Register
             "RegistryKeys" = $_.RegistryKeys
             "IsAdornmentRequired" = $_.IsAdornmentRequired
